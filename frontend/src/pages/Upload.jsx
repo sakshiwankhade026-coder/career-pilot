@@ -8,7 +8,7 @@ import { FileText, Upload as UploadIcon, CheckCircle, Target, BarChart3, Zap } f
 
 // Configuration for file size validation
 const FILE_SIZE_CONFIG = {
-  maxSizeMB: parseInt(import.meta.env.VITE_MAX_SIZE_MB || '10'),
+  maxSizeMB: parseInt(import.meta.env.VITE_MAX_SIZE_MB || '5'),
   get maxSizeBytes() {
     return this.maxSizeMB * 1024 * 1024
   }
@@ -29,9 +29,7 @@ export default function Upload() {
   const validateFileSize = (file) => {
     if (file.size > FILE_SIZE_CONFIG.maxSizeBytes) {
       const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2)
-      toast.error(
-        `File size (${fileSizeMB}MB) exceeds the maximum limit of ${FILE_SIZE_CONFIG.maxSizeMB}MB.`
-      )
+      toast.error(`File size (${fileSizeMB}MB) exceeds the maximum limit of ${FILE_SIZE_CONFIG.maxSizeMB}MB.`)
       return false
     }
     return true

@@ -3,7 +3,7 @@ import { useDropzone } from 'react-dropzone'
 import { Upload, FileText } from 'lucide-react'
 import toast from 'react-hot-toast'
 
-export default function FileUpload({ onFileSelect, disabled = false, maxSizeMB = 10 }) {
+export default function FileUpload({ onFileSelect, disabled = false, maxSizeMB = 5 }) {
   const maxSizeBytes = maxSizeMB * 1024 * 1024
 
   const onDrop = useCallback((acceptedFiles, rejectedFiles) => {
