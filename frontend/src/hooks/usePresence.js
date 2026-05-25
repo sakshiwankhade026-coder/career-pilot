@@ -9,20 +9,21 @@ export function usePresence(userIds = []) {
   const { onlineUsers, subscribe } = useSocket();
   const [presenceMap, setPresenceMap] = useState({});
 
-  // Serialize the array to a stable primitive so effect dependency comparisons
-  // use value equality rather than reference equality. Sorting guarantees that
-  // ['a','b'] and ['b','a'] are treated as the same set of tracked users.
+  // Serialize to a collision-safe JSON string so that user IDs containing
+  // commas (or any delimiter) are encoded correctly. Sorting first ensures
+  // ['a','b'] and ['b','a'] produce the same key and don't trigger extra
+  // subscriptions due to order differences.
   const serializedUserIds = useMemo(
-    () => [...userIds].sort().join(','),
+    () => JSON.stringify([...userIds].sort()),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [userIds.length, ...userIds]
   );
 
-  // Reconstruct a stable array reference from the serialized string so that
+  // Reconstruct a stable array reference by parsing the JSON string so that
   // inline arrays (e.g. usePresence(['user1','user2'])) do not cause the
   // subscription effects below to re-run on every parent render.
   const stableUserIds = useMemo(
-    () => (serializedUserIds ? serializedUserIds.split(',') : []),
+    () => JSON.parse(serializedUserIds),
     [serializedUserIds]
   );
 
